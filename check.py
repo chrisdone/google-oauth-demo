@@ -37,10 +37,14 @@ try:
     print("OK. User iD:")
     print(idinfo)
 
+    # Figured out from
+    # <https://google-auth.readthedocs.io/en/stable/reference/google.oauth2.credentials.html>
     creds = Credentials(token=ACCESS_TOKEN,scopes=SCOPES)
     print(creds.has_scopes(SCOPES))
     service = build('drive', 'v3', credentials=creds)
 
+
+    # Example taken from <https://developers.google.com/drive/api/v3/quickstart/python>
     # Call the Drive v3 API
     results = service.files().list(
         pageSize=10, fields="nextPageToken, files(id, name)").execute()
