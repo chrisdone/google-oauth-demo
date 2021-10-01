@@ -1,0 +1,57 @@
+<!--
+
+Serve this page up with warp. Go to the directory.
+
+$ stack install wrap
+$ warp
+
+Update YOURCLIENTID in the <meta> tag below.
+
+-->
+<!doctype html>
+<html>
+  <head>
+    <meta name="google-signin-client_id"
+          content="YOURCLIENTID.apps.googleusercontent.com">
+    <!-- see also https://developers.google.com/identity/protocols/oauth2/scopes -->
+    <meta name="google-signin-scope" content="email profile https://www.googleapis.com/auth/drive.metadata.readonly">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+  </head>
+  <body>
+    <h1>Google OAuth sign in example</h1>
+    <pre id="output">Log output here.</pre>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <script>
+      var id_token;
+      function onSignIn(googleUser) {
+        var profile = googleUser.getBasicProfile();
+        output('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        output('Name: ' + profile.getName());
+        output('Image URL: ' + profile.getImageUrl());
+        output('Email: ' + profile.getEmail()); // This is null if the
+        // 'email' scope is not present.
+
+        id_token = googleUser.getAuthResponse(true);
+        puttoken(JSON.stringify(id_token));
+      }
+      function output(s){
+        document.getElementById('output').innerText += ("\n\n" + s);
+      }
+      function puttoken(s){
+        document.getElementById('token').innerText = s;
+      }
+    </script>
+    <p>ID token and access token are in here:</p>
+    <textarea id="token" cols=80 rows=20></textarea>
+
+    <p><button onclick="signOut();">Sign out</button></p>
+    <script>
+      function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          output('User signed out.');
+        });
+      }
+    </script>
+  </body>
+</html>
